@@ -33,9 +33,9 @@ async def on_ready():
 # --- EVENTO: BOAS-VINDAS (A MENSAGEM DEFINIDA PELO MESTRE) ---
 @bot.event
 async def on_member_join(member):
+    # Procura o canal chamado santuário
     channel = discord.utils.get(member.guild.text_channels, name='santuário')
     if channel:
-        # Recuperando a essência da saudação de Fiarlongo
         mensagem = (
             f"✨ **Um novo Paladino cruzou o véu!**\n\n"
             f"Saudações, {member.mention}! Tu acabas de entrar em **Fiarlongo**, o Universo onde a criatividade e a união são a nossa lei.\n"
@@ -47,21 +47,24 @@ async def on_member_join(member):
             description=mensagem,
             color=0xbc22cc
         )
-        embed.set_author(name="Tribunal de Fiarlongo", icon_url=member.guild.icon.url if member.guild.icon else None)
+        icon_url = member.guild.icon.url if member.guild.icon else None
+        embed.set_author(name="Tribunal de Fiarlongo", icon_url=icon_url)
         embed.set_footer(text="Absoluto Cinema | Padrão de Qualidade Exigido")
         
         await channel.send(content=f"Bem-vindo à Família Real, {member.mention}!", embed=embed)
 
 # --- COMANDO: LIMPAR (O CHICOTE DA GUARDA REAL) ---
 @bot.command()
-@commands.has_any_role('Guarda Real', 'Arquiteto') 
+@commands.has_any_role('Guarda Real', 'Arquiteto', 'Moderador') 
 async def limpar(ctx, quantidade: int):
     await ctx.channel.purge(limit=quantidade + 1)
-    # A Juíza reporta a limpeza para o Tribunal (log interno ou mensagem temporária)
     await ctx.send(f"⚖️ **Veredito Executado:** {quantidade} impurezas removidas do Santuário.", delete_after=5)
 
 # --- INICIALIZAÇÃO DO MECANISMO ---
 if __name__ == "__main__":
     keep_alive()
     token = os.environ.get('DISCORD_TOKEN')
-    bot.run(token)
+    if token:
+        bot.run(token)
+    else:
+        print("Erro: DISCORD_TOKEN não encontrado nas variáveis de ambiente!")
