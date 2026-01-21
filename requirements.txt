@@ -1,1 +1,1 @@
-discord.py
+https://github.com/Metsre/Juiza-Fiarlongo/blob/main/requirements.txtdiscord.py
